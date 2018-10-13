@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+const {docopt} = require('docopt');
+
+const add = require('./commands/add');
+const remove = require('./commands/remove');
+const use = require('./commands/use');
+const {overrideEnvVar} = require('./src/utils');
+
+// Defines all command allowed in the cli
+const doc = `
+USAGE:
+    index.js add <name> [--username=<username>] [--token=<token>] ${add.cli.join(' ')}
+    index.js remove <name> [--username=<username>] [--token=<token>]
+    index.js use <name> [--username=<username>] [--token=<token>] (${use.cli.join(' | ')})
+`;
+const command = docopt(doc, {version: '0.0.1rc'});
+
+// Allows the user to have multiple github accounts in one project
+overrideEnvVar({
+    '--username': 'GITHUB_USERNAME',
+    '--token': 'GITHUB_TOKEN',
+}, command);
+
+// Selects the command
+if(command.add) {
+    add.method(add.filter(command, add.args));
+} else if(command.remove) {
+    remove.method(command['<name>']);
+} else if (command.use) {
+    use.method(use.filter(command, use.args));
+}
