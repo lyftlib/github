@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+const {docopt} = require('docopt');
+
+process.env.PROJECT = 'test';
+process.env.PROJECT_PATH = '/home/guillaume/lyft/tests';
+
+const add = require('./commands/add');
+const remove = require('./commands/remove');
+const use = require('./commands/use');
+const {overrideEnvVar} = require('./src/utils');
+
+const doc = `
+USAGE:
+    index.js add <name> [--username=<username>] [--token=<token>] ${add.cli.join(' ')}
+    index.js remove <name> [--username=<username>] [--token=<token>]
+    index.js use <name> [--username=<username>] [--token=<token>] (${use.cli.join(' | ')})
+`;
+const command = docopt(doc, {version: '0.0.1rc'});
+
+process.env.GITHUB_USERNAME = 'Akuket';
+process.env.GITHUB_TOKEN = '6c82c9dae4d611db7168859c7410927a9b4266c8';
+
+overrideEnvVar({
+    '--username': 'GITHUB_USERNAME',
+    '--token': 'GITHUB_TOKEN',
+}, command);
+
+
+if(command.add) {
+    add.method(add.filter(command, add.args));
+} else if(command.remove) {
+    remove.method(command['<name>']);
+} else if (command.use) {
+    use.method(use.filter(command, use.args));
+}
+
+
+// PROJECT (WEKAN) -> AJOUT RESSOURCE TYPE (GITHUB) DE NOM FRONT
+// WEKAN/resources/front/state.json
