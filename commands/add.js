@@ -2,7 +2,7 @@ const { writeFile } = require('fs');
 
 const { filter, clone, withError, getStatePath } = require('../src/utils');
 
-// Exports the command add for the Github module
+// Exports the add command for the Github module
 module.exports = {
     // Defines all parameters allowed for this command in the cli
     cli : [

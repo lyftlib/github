@@ -89,20 +89,36 @@ function getClonePath(statePath) {
     return clonePath;
 }
 
+/**
+ * A helper to retrieve the local cloned repository url from the state.json
+ * @function getCloneUrl
+ * @param {String} statePath The absolute path of the state.json
+ * @returns {String}
+ */
 function getCloneUrl(statePath) {
     return getState(statePath)['clone_url'];
 }
 
+/**
+ * Function which is able to clone a repository in the current directory
+ * @function clone
+ * @param {String} url The url of the repository that will be cloned
+ * @param {String} name The name of the resource
+ */
 function clone(url, name) {
+    // Checks if git is installed
     if (!shell.which('git')) {
         throw new Error('Git is required');
     }
 
+    // Current directory + resource name
     const clonePath = `${path.join(process.cwd(), name)}`;
 
+    // Performs the clone
     if (shell.exec(`git clone ${url} ${clonePath}`).code !== 0) {
         throw new Error('Git clone failed');
     } else {
+        // Store the local cloned repository path into the state.json
         const statePath = getStatePath(name);
 
         const state = getState(statePath);
@@ -113,6 +129,11 @@ function clone(url, name) {
     }
 }
 
+/**
+ * A helper to provide a default comportment when an error is thrown
+ * @function withError
+ * @param {Any} msg The message/object that will be printed
+ */
 function withError(msg) {
     console.log(msg);
     process.exit(-1);
