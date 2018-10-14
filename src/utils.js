@@ -50,7 +50,7 @@ function filter(command, args) {
  * @returns {String}
  */
 function getStatePath(name) {
-    return path.join(process.env.LYFTPV_PROJECT_PATH, name, 'resources', 'state.json');
+    return path.join(process.env.LYFTPV_PROJECT_PATH, 'resources', name, 'state.json');
 }
 
 /**
