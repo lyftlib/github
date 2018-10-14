@@ -11,7 +11,7 @@ const { readFileSync, writeFile } = require('fs');
  * @param {Object} command An object currently provided by docopt
  */
 function overrideEnvVar(map, command) {
-    for (let key in map) {
+    for (const key in map) {
         // In docopt a parameter not filled is null
         if (command[key] !== null) {
             process.env[map[key]] = command[key];
@@ -37,7 +37,7 @@ function filter(command, args) {
             return obj;
         }, {});
     // A default name to prevent name collisions
-    options.name = `lyft_${process.env.PROJECT}_${command['<name>']}`;
+    options.name = `lyft_${process.env.LYFTPV_PROJECT_NAME}_${command['<name>']}`;
     // The name of the resource
     options.localName = command['<name>'];
     return options;
@@ -50,7 +50,7 @@ function filter(command, args) {
  * @returns {String}
  */
 function getStatePath(name) {
-    return path.join(process.env.PROJECT_PATH, name, 'resources', 'state.json');
+    return path.join(process.env.LYFTPV_PROJECT_PATH, name, 'resources', 'state.json');
 }
 
 /**
